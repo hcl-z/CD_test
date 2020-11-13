@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # cd_test
 
 ## Project setup
