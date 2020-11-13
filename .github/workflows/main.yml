@@ -17,12 +17,14 @@ jobs:
           npm install
           npm run build
 
-      - name: Deploy # 将打包内容发布到 github page
-        uses: JamesIves/github-pages-deploy-action@3.5.9 # 使用别人写好的 actions
-        with:  # 自定义环境变量
-          ACCESS_TOKEN: ${{ secrets.CD }} # VUE_ADMIN_TEMPLATE 是我的 secret 名称，需要替换成你的
-          BRANCH: main
-          FOLDER: dist
-          REPOSITORY_NAME: hcl-z/hcl-z.github.io # 这是我的 github page 仓库
-          TARGET_FOLDER: CD_test # 打包的文件将放到静态服务器 github-actions-demo 目录下
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@v2.1.5
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          ARGS: '-rltgoDzvO --delete'
+          SOURCE: dist # 这是要复制到阿里云静态服务器的文件夹名称
+          REMOTE_HOST: '81.69.11.192' # 你的阿里云公网地址
+          REMOTE_USER: root # 阿里云登录后默认为 root 用户，并且所在文件夹为 root
+          TARGET: /root/node-server # 打包后的 dist 文件夹将放在 /root/node-server
+
 
